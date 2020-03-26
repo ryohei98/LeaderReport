@@ -351,9 +351,7 @@ function getMembers(array, keyword) {
 
   for (var col in cols) {
     //各メンバーにobjを作った方が勝手がよさそうなので...
-    var obj = {
-      number: col,
-    };
+    var obj = new Object();
     //なんでcols[col+1]を取ってこないかというと、二日目の勤務の確認が入っているから
     var nextCol = cols[col] + difference;
 
@@ -364,14 +362,14 @@ function getMembers(array, keyword) {
       var currentItem = array[0][nn2];
       //現在見ている答えを代入する
       var currentValue = array[1][nn2];
-      //IDを取得するために　[　か　]　で文字列を分割
+      //IDを取得するために [ か ] で文字列を分割
       var currentItemSplit = currentItem.split(/\[|\]/);
       //取得したIDをプロパティにする
       var currentProperty = currentItemSplit[1];
       //jsonにID：valueの形で
       obj[currentProperty] = currentValue;
     }
-    //リターン用の配列にjsonを代入
+    //リターン用の配列に代入
     members[col] = obj
     Logger.log(obj);
   }
