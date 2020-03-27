@@ -162,7 +162,7 @@ function getColByID(array, keyword) {
   var searchArray = array[0];
 
   //return用の配列を作成
-  var indexes = [];
+  var indexes = new Array(1).fill(0);
 
   //keywordを正規表現化する
   var regexp = new RegExp(".*" + keyword + ".*");
@@ -179,6 +179,7 @@ function getColByID(array, keyword) {
       indexes.push(parseInt(element));
     }
   }
+  indexes.shift();
   return indexes
 }
 
@@ -284,14 +285,15 @@ function sumNums(array, keyword) {
 //この関数内で、一日目と二日目のメンバーが同じ場合に引っ付ける作業も行う
 function createMembers(array, memberName1, memberName2) {
 
-  //一日目と二日目のメンバーをjsonの配列の形で変数に取る
+  //一日目と二日目のメンバーをobjectの配列の形で変数に取る
   var members1 = getMembers(array, memberName1);
   var members2 = getMembers(array, memberName2);
 
   //members1の空白の奴を削除する
   for (var member1 in members1) {
     var obj = members1[member1];
-    if (obj[memberName1] == "") {
+    Logger.log("obj[memberName]: %s",obj[memberName1]);
+    if (obj[memberName1]) {
       members1.splice(member1, 1);
     }
   }
@@ -311,8 +313,12 @@ function createMembers(array, memberName1, memberName2) {
 
 
       //名前が一致するかの条件分岐
-      if (member1Obj.MemberName1 == member2Obj.MemberName2) {
+      if (String(member1Obj[memberName1]) == String(member2Obj[memberName2])) {
 
+        Logger.log("%s: %s: %s",
+                   member1Obj[memberName1],
+                   member2Obj[memberName2],
+                   member1Obj[memberName1]==member2Obj[memberName2]);
 
         //二日あるかどうかをtrueに
         twoDays = true;
@@ -355,24 +361,28 @@ function getMembers(array, keyword) {
     //なんでcols[col+1]を取ってこないかというと、二日目の勤務の確認が入っているから
     var nextCol = cols[col] + difference;
 
-    //cols[col]とnextColの間にある整数を取ってくる
-    for (var nn2 = cols[col]; nn2 < nextCol; nn2 += 1) {
+    if(!array[1][col]){
 
-      //現在見ている質問を代入する
-      var currentItem = array[0][nn2];
-      //現在見ている答えを代入する
-      var currentValue = array[1][nn2];
-      //IDを取得するために [ か ] で文字列を分割
-      var currentItemSplit = currentItem.split(/\[|\]/);
-      //取得したIDをプロパティにする
-      var currentProperty = currentItemSplit[1];
-      //jsonにID：valueの形で
-      obj[currentProperty] = currentValue;
+    //cols[col]とnextColの間にある整数を取ってくる
+      for (var nn2 = cols[col]; nn2 < nextCol; nn2 += 1) {
+        //現在見ている質問を代入する
+        var currentItem = array[0][nn2];
+        //現在見ている答えを代入する
+        var currentValue = array[1][nn2];
+        //IDを取得するために [ か ] で文字列を分割
+        var currentItemSplit = currentItem.split(/\[|\]/);
+        //取得したIDをプロパティにする
+        var currentProperty = currentItemSplit[1];
+        //jsonにID：valueの形で
+        obj[currentProperty] = currentValue;
+
+
+      }
     }
     //リターン用の配列に代入
     members[col] = obj
-    Logger.log(obj);
+    Logger.log("obj:%s",obj);
   }
-  Logger.log(members);
+  Logger.log("returnされる配列:%s",members);
   return members
 }
