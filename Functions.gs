@@ -22,7 +22,7 @@ function createLatest(sheet) {
 }
 
 
-//すべての行を下に一行ずらす関数
+//見出し以下のすべての行を下に一行ずらす関数
 
 function goDownRow(sheet) {
   //最終行の取得
@@ -111,6 +111,8 @@ function goDownRowKey2(sheet, keyword1, keyword2, col) {
   }
 }
 
+
+//引数にどの列に番号が入っているかを決めるキーワードを取り行を一行さげるとともにナンバリングを行う
 function goDownNNum(sheet, keyword) {
   // 最後の行列を取得する
   var lastRow = sheet.getLastRow();
@@ -129,7 +131,7 @@ function goDownNNum(sheet, keyword) {
     var numRow = ranges[0].getRow();
     var numCol = ranges[0].getColumn();
 
-    //最新の番号を取得
+    //最新のナンバリングを取得
     var latestNum = sheet.getRange(numRow + 1, numCol).getValue();
 
     //一を足して変数に入れておく
@@ -196,7 +198,7 @@ function getNSet(sheet, keyword, value) {
 }
 
 
-//検索したいキーワードをもとにListSheetの上から一行を検索して行番号を格納した配列を返す関数
+//検索したいキーワードをもとにarray[0]を検索して行番号を格納した配列を返す関数
 
 function getColByID(array, keyword) {
 
@@ -227,7 +229,7 @@ function getColByID(array, keyword) {
 
 
 
-
+// 引数にsheetをとって該当の行番号を返す関数（SHeetList以外用)
 function getColByIDwoCol(sheet, keyword) {
 
   //最終列の取得
@@ -277,6 +279,7 @@ function isSecondDay(array) {
   return secondDay;
 }
 
+// 引数に最新の回答の保持された二次元配列と質問のIDをとってIDから回答を返す関数
 function getValueByID(array, keyword) {
   //列番号の配列を取得し変数に格納
   var cols = getColByID(array, keyword);
@@ -361,13 +364,15 @@ function createMembers(array, memberName1, memberName2) {
       var member2Obj = members2[member2];
 
       //名前が一致するかの条件分岐
-      if (member1Obj[memberName1] == member2Obj[memberName2] && member1Obj[memberName1]) {
+      if (member1Obj[memberName1] == member2Obj[memberName2]
+        && member1Obj[memberName1]) {
 
         //二日あるかどうかをtrueに
         twoDays = true;
 
         // 一日目と二日目に同じメンバーがいることを判定
         if(members1[member1][memberName1] == members2[member2][memberName2]){
+          // いたら削除しとく
           members2.splice(member2, 1);
         }
 
@@ -397,7 +402,7 @@ function createMembers(array, memberName1, memberName2) {
  return members1
 }
 
-
+// 各日のメンバーの各valueをObject型に代入して返す関数
 function getMembers(array, keyword) {
   //keywordを使ってarrayのindexを取得
   var cols = getColByID(array, keyword);
@@ -436,6 +441,7 @@ function getMembers(array, keyword) {
   return members
 }
 
+// SheetIndiviにValueをsetするためにmembersに必要な値を追加する関数
 function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numApplying2){
   var members = membersArray;
   for(var member in members ){
@@ -476,6 +482,7 @@ function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numAp
   return members
 }
 
+// 与えられたものが空白かを判定し、空白ならば0空白でなければ、valueをintにして返す関数
 function avoidBlank(thisMember, keyword){
   // return 用の変数を用意、初期値として0を設定
   var intNum = 0;
@@ -487,21 +494,44 @@ function avoidBlank(thisMember, keyword){
   return intNum
 }
 
+// メンバーをセットする関数
+// 引数には（セットしたいシート、メンバーのObjが格納された配列、
+// どの行をもとに行を下げるかのキーワード、一日目のメンバー名のID、二日目のメンバー名のID）をとる
 function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2,dateKey){
+  // ここではメンバー名をもとに行をおろしたいので、メンバー名の行を取得する
   var col = getColByIDwoCol(sheet, keyword);
+
+  // 配列の中の各メンバーを取り出す
   for(var member in members){
+    // 取り出したメンバーを代入しておく
     var thisMember = members[member];
+    // 取り出したメンバーのメンバー名をもとに行を下げる
     goDownRowKey2(sheet, thisMember[memberName1], thisMember[memberName2], col);
+
+    // メンバーの各Valueをとりだすためのfor
     for(var key in keyObj){
+      // メンバーのObjのkeyと引数のキーワードが一致するかを条件分岐
       if( key == keyword){
+
+        // その中でも一日目のメンバー名の方に名前があるかを分岐
         if(thisMember[memberName1]){
+          // あればその値をセット
           getNSet(sheet, key, thisMember[memberName1]);
+
+        // 一日目になくて、二日目のみ名前がある場合
         }else if(thisMember[memberName2]){
+          // 二日目のメンバー名をセット
           getNSet(sheet, key, thisMember[memberName2]);
         }
+
+        // 日付だけはメンバーのobjにないので別で代入
       }else if(key == dateKey){
+        // Mainの方で渡しているlatestDateをセット
         getNSet(sheet,dateKey,keyObj[key]);
-      }else if(key != keyword && thisMember[keyObj[key]] ){
+
+      //引数のキーワードと一致せず、かつそのValueが空白でないときに
+      }else if(thisMember[keyObj[key]] ){
+        // メンバーの各Valueを代入していく
         getNSet(sheet, key, thisMember[keyObj[key]] );
       }
     }
