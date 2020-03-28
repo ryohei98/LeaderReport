@@ -162,7 +162,8 @@ function Main(){
   members = adjustMembers(members, "NumServed1","NumServed2","NumApplying1","NumApplying2");
   var keyObj = {"メンバー名":"MemberName",
                   "対応人数":"NumServedSum",
-                  "目標入会率":"TargetRate",
+                  "一日目目標入会率":"TargetRate1",
+                  "二日目目標入会率":"TargetRate2",
                   "一日目入会率":"ApplyingRate1",
                   "二日目入会率":"ApplyingRate2",
                   "合計入会率":"RateSum",
