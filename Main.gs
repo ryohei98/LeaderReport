@@ -165,8 +165,10 @@ function Main(){
                   "目標入会率":"TargetRate",
                   "一日目入会率":"ApplyingRate1",
                   "二日目入会率":"ApplyingRate2",
-                  "合計入会率":"RateSum"};
-  setMembers(SheetIndivi, members, keyObj,"メンバー名","MemberName1","MemberName2");
+                  "合計入会率":"RateSum",
+                  "日付": latestDate
+                };
+  setMembers(SheetIndivi, members, keyObj,"メンバー名","MemberName1","MemberName2","日付");
 
 
 }
