@@ -37,7 +37,7 @@ function Main(){
 
   // メールのためにObjectに格納しておく
     var obj = makeObjForEmail(array);
-    
+
   // 以下で各valueを取得
   // 会場名(質問についているIDをもとに取得してくる）
   var latestPlace = getValueByID(latestArray, placeName);
@@ -198,5 +198,6 @@ function Main(){
   members = adjustMembers(members, numServed1,numServed2,numApplying1,numApplying2);
   members =  setMembers(SheetIndivi, members, keyObj,"メンバー名",memberName1, memberName2,"日付");
 
+  sendEmail(obj, members);
 
 }

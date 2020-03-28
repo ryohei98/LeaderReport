@@ -3,6 +3,26 @@
 
 <head>
   <style>
+    .header{
+      background-color:#2288ff;
+      color: #fff;
+      margin:0;
+      margin-bottom: 10px;
+      padding: 10px 0 10px 0;
+      width:100%;
+      text-align: center;
+    }
+
+    .chapter-head{
+      background-color:#2288ff;
+      color: #fff;
+      margin:0;
+      margin-bottom: 10px;
+      padding: 10px 30px;
+      width:100%;
+      text-align:left;
+      border-radius: 5px;
+    }
 
     .main {
       text-align: center;
@@ -11,6 +31,13 @@
     .content-wrapper {
       text-align: left;
     }
+
+    .chapter-wrapper {
+      text-align: left;
+      margin-bottom:30px;
+      border: 1px solid gray;
+      border-radius: 5px;
+    }
   </style>
   <meta charset='UTF-8' />
   <meta name='viewport' content='width=device-width, initial-scale=1.0' />
@@ -18,8 +45,10 @@
 </head>
 
 <body>
+  <div class = 'header'>
+    <h1 class ='header'>リーダー報告書</h1>
+  </div>
   <div class='container main'>
-    <h1 class='py-5'>リーダー報告書</h1>
     <div class='content-wrapper'>
       <table class='table table-hover mb-5'>
         <tbody>
@@ -38,62 +67,89 @@
         </tbody>
       </table>
       <h1>一日目</h1>
-      <h2>個人記録</h2>
-      <table class='table table-hover'>
-        <thead>
-          <tr>
-            <th scope='col'>メンバー名</th>
-            <th scope='col'>早退遅刻</th>
-            <th scope='col'>時間</th>
-            <th scope='col'>目標入会率</th>
-            <th scope='col'>個人入会率(実績)</th>
-            <th scope='col'>接客数(実績)</th>
-            <th scope='col'>入会数(実績)</th>
-            <th scope='col'>自宅入会数(実績)</th>
-            <th scope='col'>休憩予定</th>
-            <th scope='col'>休憩結果</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope='row'>" + thisMember["MemberName"] + "</th>
-            <td>Mark</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
+      <div class='chapter-wrapper'>
+        <h2 class='chapter-head'>個人記録</h2>
+        <table class='table table-hover'>
+          <thead>
+            <tr>
+              <th scope='col'>メンバー名</th>
+              <th scope='col'>早退遅刻</th>
+              <th scope='col'>時間</th>
+              <th scope='col'>目標入会率</th>
+              <th scope='col'>入会率</th>
+              <th scope='col'>接客数</th>
+              <th scope='col'>入会数</th>
+              <th scope='col'>入会数</th>
+              <th scope='col'>休憩予定</th>
+              <th scope='col'>休憩結果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope='row'>" + thisMember["MemberName"] + "</th>
+              <td>Mark</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
 
-          </tr>
-        </tbody>
-      </table>
-      <h2>時間帯別の記録</h2>
-      <table class='table table-hover'>
-        <thead>
-          <tr>
-            <th scope='col'></th>
-            <th scope='col'>11:30</th>
-            <th scope='col'>13:00</th>
-            <th scope='col'>15:00</th>
-            <th scope='col'>17:00</th>
-            <th scope='col'>19:00</th>
-            <th scope='col'>それ以降</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope='row'>" + thisMember["MemberName"] + "</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-          </tr>
-        </tbody>
-      </table>
-      <h2>
-        来場者属性
-      </h2>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class ="chapter-wrapper">
+        <h2 class ="chapter-head">時間帯別の記録</h2>
+        <table class='table table-hover'>
+          <thead>
+            <tr>
+              <th scope='col'></th>
+              <th scope='col'>11:30</th>
+              <th scope='col'>13:00</th>
+              <th scope='col'>15:00</th>
+              <th scope='col'>17:00</th>
+              <th scope='col'>19:00</th>
+              <th scope='col'>それ以降</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope='row'>一日目</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class ="chapter-wrapper">
+        <h2 class ="chapter-head">来場者属性</h2>
+        <table class='table table-hover'>
+          <thead>
+            <tr>
+              <th scope='col'></th>
+              <th scope='col'>11:30</th>
+              <th scope='col'>13:00</th>
+              <th scope='col'>15:00</th>
+              <th scope='col'>17:00</th>
+              <th scope='col'>19:00</th>
+              <th scope='col'>それ以降</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope='row'>" + thisMember["MemberName"] + "</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
     </div>
   </div>
