@@ -1,4 +1,5 @@
 function Main(){
+
   // アクティブなスプレッドシートを取得
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -13,92 +14,127 @@ function Main(){
   var SheetIndivi = ss.getSheetByName("Individual");
   var latestArray = createLatest(SheetList)
 
+  var placeName = "PlaceName";
+  var leaderName = "LeaderName";
+  var date = "Date";
+  var serviceShort = "ServiceShort";
+  var salesGood = "SalesGood";
+  var salesBad = "SalesBad";
+  var placeInformation = "PlaceInFormation";
+  var sugoi = "Sugoi";
+  var notice = "Notice";
+  var memberName1 = "MemberName1";
+  var memberName2 = "MemberName2";
+  var attendance1 = "Attendance1";
+  var attendance2 = "Attendance2";
+  var numServed1 = "NumServed1";
+  var numServed2 = "NumServed2";
+  var numServedSum = "NumServedSum";
+  var numApplying1 = "NumApplying1";
+  var numApplying2 = "NumApplying2";
+  var numApplyingSum = "NumApplyingSum"
+
+
+  // メールのためにObjectに格納しておく
+    var obj = makeObjForEmail(array);
+    
   // 以下で各valueを取得
   // 会場名(質問についているIDをもとに取得してくる）
-  var latestPlace = getValueByID(latestArray, "PlaceName");
-
+  var latestPlace = getValueByID(latestArray, placeName);
+  obj[placeName] = latestPlace;
   // リーダー名
-  var latestLeaderName = getValueByID(latestArray, "LeaderName");
+  var latestLeaderName = getValueByID(latestArray, leaderName);
+  obj[leaderName] = latestLeaderName;
+
   // Logger.log("latestLeaderName:%s",latestLeaderName);
-
   // 開催日
-  var latestDate = getValueByID(latestArray, "Date");
-
+  var latestDate = getValueByID(latestArray, date);
+  obj[date] = latestDate;
 
   // 教材サービス
-  var latestService = getValueByID(latestArray, "ServiceShort");
+  var latestService = getValueByID(latestArray, serviceShort);
+  obj[serviceShort] = latestService;
 
   // 営業・良かった点
-  var latestSalesGood = getValueByID(latestArray, "SalesGood");
+  var latestSalesGood = getValueByID(latestArray, salesGood);
+  obj[salesGood] = latestSalesGood;
 
   // 営業悪かった・不明点
-  var latestSalesBad = getValueByID(latestArray, "SalesBad");
+  var latestSalesBad = getValueByID(latestArray, salesBad);
+  obj[salesBad] = latestSalesBad;
 
   // 店舗固有情報共有
-  var latestPlaceInfo = getValueByID(latestArray, "PlaceInformation");
+  var latestPlaceInfo = getValueByID(latestArray, placeInformation);
+  obj[placeInformation] = latestPlaceInfo;
 
   // スゴイきみ
-  var latestSugoi = getValueByID(latestArray, "Sugoi");
+  var latestSugoi = getValueByID(latestArray, sugoi);
+  obj[sugoi] = latestSugoi;
 
   // 気付き
-  var latestNotice = getValueByID(latestArray, "Notice");
-
-  // メンバー名
-  var memberNames1 = getValueByID(latestArray, "MemberName1");
-  var memberNames2 = getValueByID(latestArray, "MemberName2");
-
-  // 遅刻早退
-  var lateCols1 = getValueByID( latestArray, "Attendance1");
-  var lateCols2 = getValueByID( latestArray, "Attendance2");
-
-  // 目標入会率
-  var rateGoalCols1 = getValueByID( latestArray, "TargetRate1");
-  var rateGoalCols2 = getValueByID( latestArray, "TargetRate2");
+  var latestNotice = getValueByID(latestArray, notice);
+  obj[notice] = latestNotice;
 
   // 以下で直近の回答を変数に格納
   // 二日目の勤務有無をBoolean型で代入しておく
   var secondDay = isSecondDay(latestArray);
+  obj["secondDay"] = secondDay;
 
   // 一日目の来場者を合計して格納
-  var latestNumServed1 = sumNums(latestArray,"NumServed1");
-  // Logger.log("latestNumServed1:" + latestNumServed1);
+  var latestNumServed1 = sumNums(latestArray,numServed1);
+  obj[numServed1] = latestNumServed1;
 
   // 二日目の来場者
-  var latestNumServed2 = sumNums(latestArray,"NumServed2");
-
-  // Logger.log("latestNumServed2:" + latestNumServed2);
+  var latestNumServed2 = sumNums(latestArray,numServed2);
+  obj[numServed2] = latestNumServed2;
 
   // 各日の来場者を合計
   var latestNumServedSum = latestNumServed1 + latestNumServed2;
+  obj[numServedSum] = latestNumServedSum;
 
   // 一日目の入会者を合計して格納
-  var latestNumApplying1 = sumNums(latestArray,"NumApplying1");
+  var latestNumApplying1 = sumNums(latestArray,numApplying1);
+  obj[numApplying1] = latestNumApplying1;
 
   // Logger.log("latestNumApplying1:" + latestNumApplying1);
 
   // 二日目の入会者
-  var latestNumApplying2 = sumNums(latestArray,"NumApplying2");
+  var latestNumApplying2 = sumNums(latestArray,numApplying2);
+  obj[numApplying2] = latestNumApplying2;
 
   // Logger.log("latestNumApplying2:" + latestNumApplying2);
 
   // 各日の入会者を合計して格納
   var latestNumApplyingSum = latestNumApplying1 + latestNumApplying2;
-  // Logger.log("latestNumApplyingSum:" + latestNumApplyingSum)
+  obj[numApplyingSum] = latestNumApplyingSum;
 
   // 入会者・来場者から入会率を導出
   var latestRateSum = String(Math.round(( latestNumApplyingSum / latestNumServedSum ) * 100)) + "%";
+  obj["RateSum"] = latestRateSum;
   var latestRate1 = String(Math.round(( latestNumApplying1 / latestNumServed1 ) * 100)) + "%";
+  obj["Rate1"] = latestRate1;
   if( secondDay ){
     var latestRate2 = String(Math.round(( latestNumApplying2 / latestNumServed2 ) * 100)) + "%";
   }else{
     var latestRate2 = "0%";
   }
+  obj["Rate2"] = latestRate2;
   // Logger.log("latestRateSum:" + latestRateSum + "%\n" + "latestRate1:" + latestRate1 + "%\n" + "latestRate2:" + latestRate2 + "%");
 
+  // IndividualシートのsetMembers()のためにObjをつくっておく
+    var keyObj = {"メンバー名":"MemberName",
+                    "対応人数":"NumServedSum",
+                    "一日目目標入会率":"TargetRate1",
+                    "二日目目標入会率":"TargetRate2",
+                    "一日目入会率":"ApplyingRate1",
+                    "二日目入会率":"ApplyingRate2",
+                    "合計入会率":"RateSum",
+                    "日付": latestDate
+                  };
+
+
   // メンバー関係はmembersという二次元配列に格納する
-  var members = createMembers(latestArray, "MemberName1", "MemberName2");
-
-
+  var members = createMembers(latestArray, memberName1, memberName2);
 
 
 // シートの更新系ははじめに二次配列に格納してからの方が処理が早いのでそれで対応したい
@@ -158,18 +194,9 @@ function Main(){
   getNSet(SheetPlace, "報告", latestPlaceInfo);
 
   // Individualシート
-  var members = createMembers(latestArray,"MemberName1", "MemberName2");
-  members = adjustMembers(members, "NumServed1","NumServed2","NumApplying1","NumApplying2");
-  var keyObj = {"メンバー名":"MemberName",
-                  "対応人数":"NumServedSum",
-                  "一日目目標入会率":"TargetRate1",
-                  "二日目目標入会率":"TargetRate2",
-                  "一日目入会率":"ApplyingRate1",
-                  "二日目入会率":"ApplyingRate2",
-                  "合計入会率":"RateSum",
-                  "日付": latestDate
-                };
-  setMembers(SheetIndivi, members, keyObj,"メンバー名","MemberName1","MemberName2","日付");
+  var members = createMembers(latestArray,memberName1, memberName2);
+  members = adjustMembers(members, numServed1,numServed2,numApplying1,numApplying2);
+  members =  setMembers(SheetIndivi, members, keyObj,"メンバー名",memberName1, memberName2,"日付");
 
 
 }

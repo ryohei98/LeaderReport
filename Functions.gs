@@ -79,11 +79,11 @@ function goDownRowKey2(sheet, keyword1, keyword2, col) {
   var lastCol = sheet.getLastColumn();
 
   // 範囲を決定しておく
-  Logger.log("2,%s,%s,%s",col,modifiedLastRow,lastCol)
+  Logger.log("2,%s,%s,%s", col, modifiedLastRow, lastCol)
   var findRange = sheet.getRange(2, col, modifiedLastRow, lastCol);
 
   // textFinderのために正規表現を使った文字列を作っておく
-  var regexp = "(.*" + keyword1 + ".*)|(.*" +keyword2 + ".*)";
+  var regexp = "(.*" + keyword1 + ".*)|(.*" + keyword2 + ".*)";
 
   //テキストファインダーを作成
   var tf = findRange.createTextFinder(regexp).useRegularExpression(true);
@@ -249,7 +249,7 @@ function getColByIDwoCol(sheet, keyword) {
     cols[range] = ranges[range].getColumn();
   }
 
-  Logger.log("getColByIDwoCol:%s",cols);
+  Logger.log("getColByIDwoCol:%s", cols);
 
   return cols
 }
@@ -364,14 +364,14 @@ function createMembers(array, memberName1, memberName2) {
       var member2Obj = members2[member2];
 
       //名前が一致するかの条件分岐
-      if (member1Obj[memberName1] == member2Obj[memberName2]
-        && member1Obj[memberName1]) {
+      if (member1Obj[memberName1] == member2Obj[memberName2] &&
+        member1Obj[memberName1]) {
 
         //二日あるかどうかをtrueに
         twoDays = true;
 
         // 一日目と二日目に同じメンバーがいることを判定
-        if(members1[member1][memberName1] == members2[member2][memberName2]){
+        if (members1[member1][memberName1] == members2[member2][memberName2]) {
           // いたら削除しとく
           members2.splice(member2, 1);
         }
@@ -390,16 +390,16 @@ function createMembers(array, memberName1, memberName2) {
     }
   }
   // 最後にかぶってなかった二日目の人を代入する
-  for(var member2 in members2){
+  for (var member2 in members2) {
 
     // 空白判定
-    if(members2[member2].memberName2){
+    if (members2[member2].memberName2) {
 
       // 追加
       members1.push(members2[member2]);
     }
   }
- return members1
+  return members1
 }
 
 // 各日のメンバーの各valueをObject型に代入して返す関数
@@ -419,9 +419,9 @@ function getMembers(array, keyword) {
     //なんでcols[col+1]を取ってこないかというと、二日目の勤務の確認が入っているから
     var nextCol = cols[col] + difference;
 
-    if(array[1][cols[col]]){
+    if (array[1][cols[col]]) {
 
-    //cols[col]とnextColの間にある整数を取ってくる
+      //cols[col]とnextColの間にある整数を取ってくる
       for (var nn2 = cols[col]; nn2 < nextCol; nn2 += 1) {
         //現在見ている質問を代入する
         var currentItem = array[0][nn2];
@@ -434,25 +434,25 @@ function getMembers(array, keyword) {
         //jsonにID：valueの形で
         obj[currentProperty] = currentValue;
       }
-        // できた奴を代入する
-        members[col] = obj;
+      // できた奴を代入する
+      members[col] = obj;
     }
   }
   return members
 }
 
 // SheetIndiviにValueをsetするためにmembersに必要な値を追加する関数
-function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numApplying2){
+function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numApplying2) {
   var members = membersArray;
-  for(var member in members ){
+  for (var member in members) {
     // 変数にとっておく
     var thisMember = members[member];
 
     // それぞれの数字を取得する
-    var numberServed1 = avoidBlank(thisMember,numServed1);
-    var numberServed2 = avoidBlank(thisMember,numServed2);
-    var numberApplying1 = avoidBlank(thisMember,numApplying1);
-    var numberApplying2 = avoidBlank(thisMember,numApplying2);
+    var numberServed1 = avoidBlank(thisMember, numServed1);
+    var numberServed2 = avoidBlank(thisMember, numServed2);
+    var numberApplying1 = avoidBlank(thisMember, numApplying1);
+    var numberApplying2 = avoidBlank(thisMember, numApplying2);
 
     // 合計した数字を取得しとく
     var numberServedSum = numberServed1 + numberServed2;
@@ -461,20 +461,20 @@ function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numAp
     // 一日目と二日目、合計の入会率を求める
     thisMember["NumServedSum"] = numberServedSum;
     thisMember["NumApplyingSum"] = numberApplyingSum;
-    thisMember["RateSum"] = String(Math.round( (numberApplyingSum / numberServedSum)*100)) + "%";
+    thisMember["RateSum"] = String(Math.round((numberApplyingSum / numberServedSum) * 100)) + "%";
 
     // 0では割れないので0を回避する
-    if(numberApplying1 == 0){
+    if (numberApplying1 == 0) {
       // 分母にゼロが来るときは０を代入しておく
       thisMember["ApplyingRate1"] = "0%";
-    }else{
+    } else {
       // それ以外の時は正当な入会率を求めておく
-      thisMember["ApplyingRate1"] = String(Math.round((numberApplying1 / numberServed1)*100))+"%";
+      thisMember["ApplyingRate1"] = String(Math.round((numberApplying1 / numberServed1) * 100)) + "%";
     }
-    if(numberApplying2 == 0){
+    if (numberApplying2 == 0) {
       thisMember["ApplyingRate2"] = "0%";
-    }else{
-      thisMember["ApplyingRate2"] = String(Math.round((numberApplying2 / numberServed2)*100)) + "%";
+    } else {
+      thisMember["ApplyingRate2"] = String(Math.round((numberApplying2 / numberServed2) * 100)) + "%";
     }
     // return用の配列に戻す
     members[member] = thisMember;
@@ -483,11 +483,11 @@ function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numAp
 }
 
 // 与えられたものが空白かを判定し、空白ならば0空白でなければ、valueをintにして返す関数
-function avoidBlank(thisMember, keyword){
+function avoidBlank(thisMember, keyword) {
   // return 用の変数を用意、初期値として0を設定
   var intNum = 0;
   // 空白でなければ
-  if(thisMember[keyword]){
+  if (thisMember[keyword]) {
     // intにキャストした値を代入する
     intNum = parseInt(thisMember[keyword]);
   }
@@ -497,43 +497,60 @@ function avoidBlank(thisMember, keyword){
 // メンバーをセットする関数
 // 引数には（セットしたいシート、メンバーのObjが格納された配列、
 // どの行をもとに行を下げるかのキーワード、一日目のメンバー名のID、二日目のメンバー名のID）をとる
-function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2,dateKey){
+function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2, dateKey) {
   // ここではメンバー名をもとに行をおろしたいので、メンバー名の行を取得する
   var col = getColByIDwoCol(sheet, keyword);
 
   // 配列の中の各メンバーを取り出す
-  for(var member in members){
+  for (var member in members) {
     // 取り出したメンバーを代入しておく
     var thisMember = members[member];
     // 取り出したメンバーのメンバー名をもとに行を下げる
     goDownRowKey2(sheet, thisMember[memberName1], thisMember[memberName2], col);
 
     // メンバーの各Valueをとりだすためのfor
-    for(var key in keyObj){
+    for (var key in keyObj) {
       // メンバーのObjのkeyと引数のキーワードが一致するかを条件分岐
-      if( key == keyword){
+      if (key == keyword) {
 
         // その中でも一日目のメンバー名の方に名前があるかを分岐
-        if(thisMember[memberName1]){
+        if (thisMember[memberName1]) {
           // あればその値をセット
           getNSet(sheet, key, thisMember[memberName1]);
+          thisMember["MemberName"] = thisMember[memberName1];
 
-        // 一日目になくて、二日目のみ名前がある場合
-        }else if(thisMember[memberName2]){
+          // 一日目になくて、二日目のみ名前がある場合
+        } else if (thisMember[memberName2]) {
           // 二日目のメンバー名をセット
           getNSet(sheet, key, thisMember[memberName2]);
+          thisMember["MemberName"] = thisMember[memberName2];
         }
 
         // 日付だけはメンバーのobjにないので別で代入
-      }else if(key == dateKey){
+      } else if (key == dateKey) {
         // Mainの方で渡しているlatestDateをセット
-        getNSet(sheet,dateKey,keyObj[key]);
+        getNSet(sheet, dateKey, keyObj[key]);
 
-      //引数のキーワードと一致せず、かつそのValueが空白でないときに
-      }else if(thisMember[keyObj[key]] ){
+        //引数のキーワードと一致せず、かつそのValueが空白でないときに
+      } else if (thisMember[keyObj[key]]) {
         // メンバーの各Valueを代入していく
-        getNSet(sheet, key, thisMember[keyObj[key]] );
+        getNSet(sheet, key, thisMember[keyObj[key]]);
       }
     }
+
+    members[member] = thisMember;
   }
+  return members
+}
+
+function makeObjForEmail(array){
+  var obj = new Object(1);
+  for (var index in array[0]){
+    var question = array[0][index];
+    var questionSplit = question.split(/\[|\]/);
+    var answer = array[1][index];
+    var id = questionSplit[1];
+    obj[id] = answer;
+  }
+  return obj
 }
