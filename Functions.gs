@@ -83,7 +83,7 @@ function goDownRowKey2(sheet, keyword1, keyword2, col) {
   var findRange = sheet.getRange(2, col, modifiedLastRow, lastCol);
 
   // textFinderのために正規表現を使った文字列を作っておく
-  var regexp = "(.*" + keyword1 + ".*)|(.*" +kerword2 + ".*)";
+  var regexp = "(.*" + keyword1 + ".*)|(.*" +keyword2 + ".*)";
 
   //テキストファインダーを作成
   var tf = findRange.createTextFinder(regexp).useRegularExpression(true);
@@ -196,7 +196,6 @@ function getNSet(sheet, keyword, value) {
 }
 
 
-
 //検索したいキーワードをもとにListSheetの上から一行を検索して行番号を格納した配列を返す関数
 
 function getColByID(array, keyword) {
@@ -235,7 +234,7 @@ function getColByIDwoCol(sheet, keyword) {
   var lastCol = sheet.getLastColumn();
 
   //検索範囲の決定
-  var findRange = sheet.getRange(1, 1, 1, lastCol);
+  var findRange = sheet.getRange(3, 1, 1, lastCol);
 
   //textFinderを作成
   var ranges = findRange.createTextFinder(String(keyword)).findAll();
@@ -307,7 +306,7 @@ function getValueByID(array, keyword) {
 }
 
 
-//入場者来場者を足す関数,引数に　シート、列番号の配列、最後列のintをとる
+//入場者来場者を足す関数,引数に 回答を記録したシートからとってきた配列とシートをとる
 function sumNums(array, keyword) {
   //int型で変数を宣言
   var sum = parseInt(0);
@@ -456,20 +455,20 @@ function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numAp
     // 一日目と二日目、合計の入会率を求める
     thisMember["NumServedSum"] = numberServedSum;
     thisMember["NumApplyingSum"] = numberApplyingSum;
-    thisMember["RateSum"] = (numberApplyingSum / numberServedSum)*100;
+    thisMember["RateSum"] = String(Math.round( (numberApplyingSum / numberServedSum)*100)) + "%";
 
     // 0では割れないので0を回避する
     if(numberApplying1 == 0){
       // 分母にゼロが来るときは０を代入しておく
-      thisMember["ApplyingRate1"] = 0;
+      thisMember["ApplyingRate1"] = "0%";
     }else{
       // それ以外の時は正当な入会率を求めておく
-      thisMember["ApplyingRate1"] = (numberApplying1 / numberServed1)*100;
+      thisMember["ApplyingRate1"] = String(Math.round((numberApplying1 / numberServed1)*100))+"%";
     }
     if(numberApplying2 == 0){
-      thisMember["ApplyingRate2"] = 0;
+      thisMember["ApplyingRate2"] = "0%";
     }else{
-      thisMember["ApplyingRate2"] = (numberApplying2 / numberServed2)*100;
+      thisMember["ApplyingRate2"] = String(Math.round((numberApplying2 / numberServed2)*100)) + "%";
     }
     // return用の配列に戻す
     members[member] = thisMember;
@@ -488,14 +487,22 @@ function avoidBlank(thisMember, keyword){
   return intNum
 }
 
-function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2){
+function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2,dateKey){
   var col = getColByIDwoCol(sheet, keyword);
   for(var member in members){
     var thisMember = members[member];
     goDownRowKey2(sheet, thisMember[memberName1], thisMember[memberName2], col);
     for(var key in keyObj){
-      if(key != keyword && thisMember[keyObj[key]] ){
-        getNset(sheet, key, thisMember[keyObj[key]] );
+      if( key == keyword){
+        if(thisMember[memberName1]){
+          getNSet(sheet, key, thisMember[memberName1]);
+        }else if(thisMember[memberName2]){
+          getNSet(sheet, key, thisMember[memberName2]);
+        }
+      }else if(key == dateKey){
+        getNSet(sheet,dateKey,keyObj[key]);
+      }else if(key != keyword && thisMember[keyObj[key]] ){
+        getNSet(sheet, key, thisMember[keyObj[key]] );
       }
     }
   }
