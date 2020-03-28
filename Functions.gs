@@ -79,6 +79,7 @@ function goDownRowKey2(sheet, keyword1, keyword2, col) {
   var lastCol = sheet.getLastColumn();
 
   // 範囲を決定しておく
+  Logger.log("2,%s,%s,%s",col,modifiedLastRow,lastCol)
   var findRange = sheet.getRange(2, col, modifiedLastRow, lastCol);
 
   // textFinderのために正規表現を使った文字列を作っておく
@@ -246,6 +247,8 @@ function getColByIDwoCol(sheet, keyword) {
   for (var range in ranges) {
     cols[range] = ranges[range].getColumn();
   }
+
+  Logger.log("getColByIDwoCol:%s",cols);
 
   return cols
 }
@@ -480,19 +483,19 @@ function avoidBlank(thisMember, keyword){
   // 空白でなければ
   if(thisMember[keyword]){
     // intにキャストした値を代入する
-    intNum = parseInt(array[num][keyword]);
+    intNum = parseInt(thisMember[keyword]);
   }
   return intNum
 }
 
-function setMembers(sheet, members, keyArray, memberName1, memberName2){
-  var col = getColByID(latestArray, keyArray[0]);
+function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2){
+  var col = getColByIDwoCol(sheet, keyword);
   for(var member in members){
     var thisMember = members[member];
     goDownRowKey2(sheet, thisMember[memberName1], thisMember[memberName2], col);
-    for(var key in keyArray){
-      if(key != "メンバー名" && thisMember[meyArray[key]] ){
-        getNset(sheet, key, thisMember[keyArray[key]] );
+    for(var key in keyObj){
+      if(key != keyword && thisMember[keyObj[key]] ){
+        getNset(sheet, key, thisMember[keyObj[key]] );
       }
     }
   }

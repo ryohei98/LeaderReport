@@ -96,7 +96,7 @@ function Main(){
   // Logger.log("latestRateSum:" + latestRateSum + "%\n" + "latestRate1:" + latestRate1 + "%\n" + "latestRate2:" + latestRate2 + "%");
 
   // メンバー関係はmembersという二次元配列に格納する
-  var members = createMembers(array, "MemberName1", "MemberName2");
+  var members = createMembers(latestArray, "MemberName1", "MemberName2");
 
 
 
@@ -158,7 +158,7 @@ function Main(){
   getNSet(SheetPlace, "報告", latestPlaceInfo);
 
   // Individualシート
-  var members = createMembers(array,"MemberName1", "MemberName2");
+  var members = createMembers(latestArray,"MemberName1", "MemberName2");
   members = adjustMembers(members, "NumServed1","NumServed2","NumApplying1","NumApplying2");
   var keyObj = {"メンバー名":"MemberName",
                   "対応人数":"NumServedSum",
@@ -166,7 +166,7 @@ function Main(){
                   "一日目入会率":"ApplyingRate1",
                   "二日目入会率":"ApplyingRate2",
                   "合計入会率":"RateSum"};
-  setMembers(latestArray, members, keyArray,"MemberName1","MemberName2");
+  setMembers(SheetIndivi, members, keyObj,"メンバー名","MemberName1","MemberName2");
 
 
 }
