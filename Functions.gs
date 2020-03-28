@@ -41,6 +41,8 @@ function goDownRowKey(sheet, keyword, col) {
   //範囲を決定して変数宣言
   var modifiedLastRow = sheet.getLastRow() - 1;
   var lastCol = sheet.getLastColumn();
+
+  // 範囲を決定しておく
   var findRange = sheet.getRange(2, col, modifiedLastRow, lastCol);
 
   //テキストファインダーを作成
@@ -69,8 +71,47 @@ function goDownRowKey(sheet, keyword, col) {
   }
 }
 
-function goDownNNum(sheet, keyword) {
+//一致するワードをもとにそれ以外の行を下に持っていく関数のキーワード2つバージョン
 
+function goDownRowKey2(sheet, keyword1, keyword2, col) {
+  //範囲を決定して変数宣言
+  var modifiedLastRow = sheet.getLastRow() - 1;
+  var lastCol = sheet.getLastColumn();
+
+  // 範囲を決定しておく
+  var findRange = sheet.getRange(2, col, modifiedLastRow, lastCol);
+
+  // textFinderのために正規表現を使った文字列を作っておく
+  var regexp = "(.*" + keyword1 + ".*)|(.*" +kerword2 + ".*)";
+
+  //テキストファインダーを作成
+  var tf = findRange.createTextFinder(regexp).useRegularExpression(true);
+
+  //最終列を取得しておく
+  var lastCol = sheet.getLastColumn();
+
+  //検索をかける
+  var ranges = tf.findAll();
+
+  //検索に一致するものがあったかどうかで条件分岐
+  if (ranges.length >= 1) {
+
+    //行番号を取得してその行を上に持ってくる
+    for (var range in ranges) {
+      //Rangeがかぶるとバグるので条件分岐して回避
+      if (ranges[range].getRow() > 4) {
+
+        //下の行を移動させる
+        sheet.moveRows(ranges[range], 4);
+      }
+    }
+  } else {
+    goDownRow(sheet);
+  }
+}
+
+function goDownNNum(sheet, keyword) {
+  // 最後の行列を取得する
   var lastRow = sheet.getLastRow();
   var lastCol = sheet.getLastColumn()
 
@@ -152,6 +193,7 @@ function getNSet(sheet, keyword, value) {
     }
   }
 }
+
 
 
 //検索したいキーワードをもとにListSheetの上から一行を検索して行番号を格納した配列を返す関数
@@ -287,18 +329,23 @@ function createMembers(array, memberName1, memberName2) {
 
   //一日目と二日目のメンバーをobjectの配列の形で変数に取る
   var members1 = getMembers(array, memberName1);
+  Logger.log("members1の出力を終わりました");
   var members2 = getMembers(array, memberName2);
 
   //members1の空白の奴を削除する
   for (var member1 in members1) {
+
+    // 一つ目のobjectを代入しとく
     var obj = members1[member1];
-    Logger.log("obj[memberName]: %s",obj[memberName1]);
-    if (obj[memberName1]) {
+
+    // メンバーネームが空白の時その配列を削除しておく
+    if (!obj[memberName1]) {
+
+      // 削除
       members1.splice(member1, 1);
+
     }
   }
-
-  Logger.log("members1:%s", members1);
 
   //名前の一致を探すためのfor
   for (var member1 in members1) {
@@ -307,41 +354,45 @@ function createMembers(array, memberName1, memberName2) {
     //一致を探すためのfor
     for (var member2 in members2) {
 
-      //jsonを変数に代入する
+      //objを変数に代入する
       var member1Obj = members1[member1];
       var member2Obj = members2[member2];
 
-
       //名前が一致するかの条件分岐
-      if (String(member1Obj[memberName1]) == String(member2Obj[memberName2])) {
-
-        Logger.log("%s: %s: %s",
-                   member1Obj[memberName1],
-                   member2Obj[memberName2],
-                   member1Obj[memberName1]==member2Obj[memberName2]);
+      if (member1Obj[memberName1] == member2Obj[memberName2] && member1Obj[memberName1]) {
 
         //二日あるかどうかをtrueに
         twoDays = true;
 
-        //jsonを代入するためのforを回す
+        // 一日目と二日目に同じメンバーがいることを判定
+        if(members1[member1][memberName1] == members2[member2][memberName2]){
+          members2.splice(member2, 1);
+        }
+
+        //objを代入するためのforを回す
         for (var key in member2Obj) {
           //メンバーの名前だけ条件分岐で回避
-          if (key != "MemberName2") {
+          if (key != memberName2) {
             //一日目の方に引っ付けてしまう
             member1Obj[key] = member2Obj[key];
           }
           //二日あったよのやつ
           member1Obj["TwoDays"] = twoDays;
         }
-        //空白になってるやつを回避する
-      } else if (members2[member2].MemberName != "") {
-        //members1の後ろにjsonを付け足しとく
-        //pushするとspliceした奴ずれるからどうやって対処するか考えないと....
-        members1.push(members2[member2]);
       }
     }
   }
-  return members1
+  // 最後にかぶってなかった二日目の人を代入する
+  for(var member2 in members2){
+
+    // 空白判定
+    if(members2[member2].memberName2){
+
+      // 追加
+      members1.push(members2[member2]);
+    }
+  }
+ return members1
 }
 
 
@@ -361,7 +412,7 @@ function getMembers(array, keyword) {
     //なんでcols[col+1]を取ってこないかというと、二日目の勤務の確認が入っているから
     var nextCol = cols[col] + difference;
 
-    if(!array[1][col]){
+    if(array[1][cols[col]]){
 
     //cols[col]とnextColの間にある整数を取ってくる
       for (var nn2 = cols[col]; nn2 < nextCol; nn2 += 1) {
@@ -375,14 +426,74 @@ function getMembers(array, keyword) {
         var currentProperty = currentItemSplit[1];
         //jsonにID：valueの形で
         obj[currentProperty] = currentValue;
+      }
+        // できた奴を代入する
+        members[col] = obj;
+    }
+  }
+  return members
+}
 
+function adjustMembers(membersArray, numServed1, numServed2, numApplying1, numApplying2){
+  var members = membersArray;
+  for(var member in members ){
+    // 変数にとっておく
+    var thisMember = members[member];
 
+    // それぞれの数字を取得する
+    var numberServed1 = avoidBlank(thisMember,numServed1);
+    var numberServed2 = avoidBlank(thisMember,numServed2);
+    var numberApplying1 = avoidBlank(thisMember,numApplying1);
+    var numberApplying2 = avoidBlank(thisMember,numApplying2);
+
+    // 合計した数字を取得しとく
+    var numberServedSum = numberServed1 + numberServed2;
+    var numberApplyingSum = numberApplying1 + numberApplying2;
+
+    // 一日目と二日目、合計の入会率を求める
+    thisMember["NumServedSum"] = numberServedSum;
+    thisMember["NumApplyingSum"] = numberApplyingSum;
+    thisMember["RateSum"] = (numberApplyingSum / numberServedSum)*100;
+
+    // 0では割れないので0を回避する
+    if(numberApplying1 == 0){
+      // 分母にゼロが来るときは０を代入しておく
+      thisMember["ApplyingRate1"] = 0;
+    }else{
+      // それ以外の時は正当な入会率を求めておく
+      thisMember["ApplyingRate1"] = (numberApplying1 / numberServed1)*100;
+    }
+    if(numberApplying2 == 0){
+      thisMember["ApplyingRate2"] = 0;
+    }else{
+      thisMember["ApplyingRate2"] = (numberApplying2 / numberServed2)*100;
+    }
+    // return用の配列に戻す
+    members[member] = thisMember;
+  }
+  return members
+}
+
+function avoidBlank(thisMember, keyword){
+  // return 用の変数を用意、初期値として0を設定
+  var intNum = 0;
+  // 空白でなければ
+  if(thisMember[keyword]){
+    // intにキャストした値を代入する
+    intNum = parseInt(array[num][keyword]);
+  }
+  return intNum
+}
+
+function setMembers(sheet, members, keyArray, memberName1, memberName2){
+  var col = getColByID(latestArray, keyArray[0]);
+  for(var member in members){
+    var thisMember = members[member];
+    goDownRowKey2(sheet, thisMember[memberName1], thisMember[memberName2], col);
+    for(var key in keyArray){
+      if(key != "メンバー名" && thisMember[meyArray[key]] ){
+        getNset(sheet, key, thisMember[keyArray[key]] );
       }
     }
-    //リターン用の配列に代入
-    members[col] = obj
-    Logger.log("obj:%s",obj);
   }
-  Logger.log("returnされる配列:%s",members);
-  return members
 }

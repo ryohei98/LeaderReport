@@ -1,175 +1,172 @@
 function Main(){
-//  この6行は触らないでください
+  // アクティブなスプレッドシートを取得
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // 各シートの呼び出しをして変数に格納
+
   var SheetList = ss.getSheetByName("List");
-  var listLastRow = SheetList.getLastRow();
-  var listLastCol = SheetList.getLastColumn();
-  SheetList.activate();
-  var latestArray = createLatest(SheetList, listLastRow, listLastCol);
-
-//  変更があった際には以下をいじってください
-//  ""のあるところは“”内のみを変更してください
-//  '=' の左側の文字列は絶対にいじらないでください。
-//  以下で各valueを取得
-//  会場名(質問についているIDをもとに取得してくる）
-  var thisPlace = getValueByID(SheetList, latestArray, "PlaceName", listLastRow, listLastCol);
-
-//  リーダー名
-  var thisLeaderName = getValueByID(SheetList, latestArray, "LeaderName", listLastRow, listLastCol);
-  Logger.log("thisLeaderName:%s",thisLeaderName);
-
-//  開催日
-  var thisDate = getValueByID(SheetList, latestArray, "Date", listLastRow, listLastCol);
-
-//  来場者/ここは列を取得
-  var numServeds1 = getColByID(SheetList, "NumServed1", listLastCol);
-  var numServeds2 = getColByID(SheetList, "NumServed2", listLastCol);
-
-
-//  入会者/ここは列を取得
-  var numApplyings1 = getColByID(SheetList, "NumApplying1", listLastCol);
-  var numApplyings2 = getColByID(SheetList, "NumApplying2", listLastCol);
-
-//  教材サービス
-  var thisService = getValueByID(SheetList, latestArray, "ServiceShort", listLastRow, listLastCol);
-
-//  営業・良かった点
-  var thisSalesGood = getValueByID(SheetList, latestArray, "SalesGood", listLastRow, listLastCol);
-
-//  営業悪かった・不明点
-  var thisSalesBad = getValueByID(SheetList, latestArray, "SalesBad", listLastRow, listLastCol);
-
-//  店舗固有情報共有
-  var thisPlaceInfo = getValueByID(SheetList, latestArray, "PlaceInformation", listLastRow, listLastCol);
-
-//  スゴイきみ
-  var thisSugoi = getValueByID(SheetList, latestArray, "Sugoi", listLastRow, listLastCol);
-
-//  気付き
-  var thisNotice = getValueByID(SheetList, latestArray, "Notice", listLastRow, listLastCol);
-
-//  メンバー名
-  var memberNames1 = getValueByID(SheetList, latestArray, "MemberName1", listLastRow, listLastCol);
-  var memberNames2 = getValueByID(SheetList, latestArray, "MemberName2", listLastRow, listLastCol);
-
-//  遅刻早退
-  var lateCols1 = getValueByID(SheetList, latestArray, "Attendance1", listLastRow, listLastCol);
-  var lateCols2 = getValueByID(SheetList, latestArray, "Attendance2", listLastRow, listLastCol);
-
-//  目標入会率
-  var rateGoalCols1 = getValueByID(SheetList, latestArray, "TargetRate1", listLastRow, listLastCol);
-  var rateGoalCols2 = getValueByID(SheetList, latestArray, "TargetRate2", listLastRow, listLastCol);
-
-//以上がいじれるところ、以下はGASのコードに触らない方は変更厳禁です
-
-//※※※※※　以下、変更厳禁  ※※※※※※
-
-
-//  各シートの呼び出しをして変数に格納
   var SheetResult = ss.getSheetByName("RecentResult");
   var SheetService = ss.getSheetByName("Service");
   var SheetSalesGood = ss.getSheetByName("SalesGood");
   var SheetSalesBad = ss.getSheetByName("SalesBad");
   var SheetPlace = ss.getSheetByName("PlaceSpecific");
   var SheetIndivi = ss.getSheetByName("Individual");
+  var latestArray = createLatest(SheetList)
 
-//  以下で直近の回答を変数に格納
+  // 以下で各valueを取得
+  // 会場名(質問についているIDをもとに取得してくる）
+  var latestPlace = getValueByID(latestArray, "PlaceName");
 
-//  二日目の勤務有無をBoolean型で代入しておく
-    var secondDay = isSecondDay(SheetList);
+  // リーダー名
+  var latestLeaderName = getValueByID(latestArray, "LeaderName");
+  // Logger.log("latestLeaderName:%s",latestLeaderName);
 
-//  一日目の来場者を合計して格納
-  var thisNumServed1 = sumNums(SheetList,numServeds1, listLastRow);
-//  Logger.log("thisNumServed1:" + thisNumServed1);
+  // 開催日
+  var latestDate = getValueByID(latestArray, "Date");
 
-//  二日目の来場者
-  var thisNumServed2 = sumNums(SheetList,numServeds2, listLastRow);
 
-//  Logger.log("thisNumServed2:" + thisNumServed2);
+  // 教材サービス
+  var latestService = getValueByID(latestArray, "ServiceShort");
 
-//  各日の来場者を合計
-  var thisNumServedSum = thisNumServed1 + thisNumServed2;
+  // 営業・良かった点
+  var latestSalesGood = getValueByID(latestArray, "SalesGood");
 
-//  一日目の入会者を合計して格納
-  var thisNumApplying1 = sumNums(SheetList,numApplyings1, listLastRow);
+  // 営業悪かった・不明点
+  var latestSalesBad = getValueByID(latestArray, "SalesBad");
 
-//  Logger.log("thisNumApplying1:" + thisNumApplying1);
+  // 店舗固有情報共有
+  var latestPlaceInfo = getValueByID(latestArray, "PlaceInformation");
 
-//  二日目の入会者
-  var thisNumApplying2 = sumNums(SheetList,numApplyings2, listLastRow);
+  // スゴイきみ
+  var latestSugoi = getValueByID(latestArray, "Sugoi");
 
-//  Logger.log("thisNumApplying2:" + thisNumApplying2);
+  // 気付き
+  var latestNotice = getValueByID(latestArray, "Notice");
 
-//  各日の入会者を合計して格納
-  var thisNumApplyingSum = thisNumApplying1 + thisNumApplying2;
-//  Logger.log("thisNumApplyingSum:" + thisNumApplyingSum)
+  // メンバー名
+  var memberNames1 = getValueByID(latestArray, "MemberName1");
+  var memberNames2 = getValueByID(latestArray, "MemberName2");
 
-//  入会者・来場者から入会率を導出
-  var thisRateSum = String(Math.round(( thisNumApplyingSum / thisNumServedSum ) * 100)) + "%";
-  var thisRate1 = String(Math.round(( thisNumApplying1 / thisNumServed1 ) * 100)) + "%";
+  // 遅刻早退
+  var lateCols1 = getValueByID( latestArray, "Attendance1");
+  var lateCols2 = getValueByID( latestArray, "Attendance2");
+
+  // 目標入会率
+  var rateGoalCols1 = getValueByID( latestArray, "TargetRate1");
+  var rateGoalCols2 = getValueByID( latestArray, "TargetRate2");
+
+  // 以下で直近の回答を変数に格納
+  // 二日目の勤務有無をBoolean型で代入しておく
+  var secondDay = isSecondDay(latestArray);
+
+  // 一日目の来場者を合計して格納
+  var latestNumServed1 = sumNums(latestArray,"NumServed1");
+  // Logger.log("latestNumServed1:" + latestNumServed1);
+
+  // 二日目の来場者
+  var latestNumServed2 = sumNums(latestArray,"NumServed2");
+
+  // Logger.log("latestNumServed2:" + latestNumServed2);
+
+  // 各日の来場者を合計
+  var latestNumServedSum = latestNumServed1 + latestNumServed2;
+
+  // 一日目の入会者を合計して格納
+  var latestNumApplying1 = sumNums(latestArray,"NumApplying1");
+
+  // Logger.log("latestNumApplying1:" + latestNumApplying1);
+
+  // 二日目の入会者
+  var latestNumApplying2 = sumNums(latestArray,"NumApplying2");
+
+  // Logger.log("latestNumApplying2:" + latestNumApplying2);
+
+  // 各日の入会者を合計して格納
+  var latestNumApplyingSum = latestNumApplying1 + latestNumApplying2;
+  // Logger.log("latestNumApplyingSum:" + latestNumApplyingSum)
+
+  // 入会者・来場者から入会率を導出
+  var latestRateSum = String(Math.round(( latestNumApplyingSum / latestNumServedSum ) * 100)) + "%";
+  var latestRate1 = String(Math.round(( latestNumApplying1 / latestNumServed1 ) * 100)) + "%";
   if( secondDay ){
-    var thisRate2 = String(Math.round(( thisNumApplying2 / thisNumServed2 ) * 100)) + "%";
+    var latestRate2 = String(Math.round(( latestNumApplying2 / latestNumServed2 ) * 100)) + "%";
   }else{
-    var thisRate2 = "0%";
+    var latestRate2 = "0%";
   }
+  // Logger.log("latestRateSum:" + latestRateSum + "%\n" + "latestRate1:" + latestRate1 + "%\n" + "latestRate2:" + latestRate2 + "%");
 
-  Logger.log("thisRateSum:" + thisRateSum + "%\n" + "thisRate1:" + thisRate1 + "%\n" + "thisRate2:" + thisRate2 + "%");
+  // メンバー関係はmembersという二次元配列に格納する
+  var members = createMembers(array, "MemberName1", "MemberName2");
 
-//  RecentResultシートの更新を行う
-    SheetResult.activate();
-//  まずは店舗の列でgoDownRow()を実行
+
+
+
+// シートの更新系ははじめに二次配列に格納してからの方が処理が早いのでそれで対応したい
+// まずは完成優先でのちのちの課題か？
+// イメージとしては格納用の配列を用意して毎回リターンする
+// 最終的にはその配列を二次元配列化してsetValues()で一発格納
+// GASのAPI使わない分こっちのが早いと思われる
+
+  // RecentResultシートの更新を行う
+  // まずは店舗の列でgoDownRow()を実行
   var placeNameCol = getColByIDwoCol(SheetResult,"店舗");
-  Logger.log("placeNameCol:%s",placeNameCol);
+  // Logger.log("placeNameCol:%s",placeNameCol);
 
-//  当該店舗の行以外を下にずらす
-  goDownRowKey(SheetResult, thisPlace, placeNameCol);
+  // 当該店舗の行以外を下にずらす
+  goDownRowKey(SheetResult, latestPlace, placeNameCol);
 
-// 一つ一つValueをセットしていく/ほんとは配列に格納してからセットの方がいいけど、保守性のために・・・。
-  getNSet(SheetResult, "日付", thisDate);
-  getNSet(SheetResult, "店舗", thisPlace);
-  getNSet(SheetResult, "リーダー", thisLeaderName);
-  getNSet(SheetResult, "来場", thisNumServedSum);
-  getNSet(SheetResult, "入会者数", thisNumApplyingSum);
-  getNSet(SheetResult, "入会率", thisRateSum);
+  // 一つ一つValueをセットしていく
+  getNSet(SheetResult, "日付", latestDate);
+  getNSet(SheetResult, "店舗", latestPlace);
+  getNSet(SheetResult, "リーダー", latestLeaderName);
+  getNSet(SheetResult, "来場", latestNumServedSum);
+  getNSet(SheetResult, "入会者数", latestNumApplyingSum);
+  getNSet(SheetResult, "入会率", latestRateSum);
 
-//  Serviceシートについて
-  SheetService.activate();
-//  全部の行を下におろすのとナンバリングとを行う
+  // Serviceシートについて
+  // 全部の行を下におろすのとナンバリングとを行う
   goDownNNum(SheetService, "番号");
 
-//  各Valueをセットしていく
-  getNSet(SheetService, "日付", thisDate);
-  getNSet(SheetService, "店舗", thisPlace);
-  getNSet(SheetService, "報告", thisService);
+  // 各Valueをセットしていく
+  getNSet(SheetService, "日付", latestDate);
+  getNSet(SheetService, "店舗", latestPlace);
+  getNSet(SheetService, "報告", latestService);
 
-//  SalesGoodシートについて
-  SheetSalesGood.activate();
-//  全部の行を下におろすのとナンバリングとを行う
+  // SalesGoodシートについて
+  // 全部の行を下におろすのとナンバリングとを行う
   goDownNNum(SheetSalesGood, "番号");
 
-//  各Valueをセットしていく
-  getNSet(SheetSalesGood, "日付", thisDate);
-  getNSet(SheetSalesGood, "店舗", thisPlace);
-  getNSet(SheetSalesGood, "報告", thisSalesGood);
+  // 各Valueをセットしていく
+  getNSet(SheetSalesGood, "日付", latestDate);
+  getNSet(SheetSalesGood, "店舗", latestPlace);
+  getNSet(SheetSalesGood, "報告", latestSalesGood);
 
-//  SalesBadシートについて
-  SheetSalesBad.activate();
-//  全部の行を下におろしてナンバリング
+  // SalesBadシートについて
+  // 全部の行を下におろしてナンバリング
   goDownNNum(SheetSalesBad, "番号");
 
-//  各Valueをセットしていく
-  getNSet(SheetSalesBad, "日付", thisDate);
-  getNSet(SheetSalesBad, "店舗", thisPlace);
-  getNSet(SheetSalesBad, "報告", thisSalesBad);
+  // 各Valueをセットしていく
+  getNSet(SheetSalesBad, "日付", latestDate);
+  getNSet(SheetSalesBad, "店舗", latestPlace);
+  getNSet(SheetSalesBad, "報告", latestSalesBad);
 
-//  PlaceSpecificシートについて
-  SheetPlace.activate();
-//  上と同じなので以下略
+  // PlaceSpecificシートについて
+  // 上と同じなので以下略
   goDownNNum(SheetPlace, "番号");
-  getNSet(SheetPlace, "日付", thisDate);
-  getNSet(SheetPlace, "店舗", thisPlace);
-  getNSet(SheetPlace, "報告", thisPlaceInfo);
+  getNSet(SheetPlace, "日付", latestDate);
+  getNSet(SheetPlace, "店舗", latestPlace);
+  getNSet(SheetPlace, "報告", latestPlaceInfo);
 
-//  Individualシートのためにクラスを作成する
+  // Individualシート
+  var members = createMembers(array,"MemberName1", "MemberName2");
+  members = adjustMembers(members, "NumServed1","NumServed2","NumApplying1","NumApplying2");
+  var keyObj = {"メンバー名":"MemberName",
+                  "対応人数":"NumServedSum",
+                  "目標入会率":"TargetRate",
+                  "一日目入会率":"ApplyingRate1",
+                  "二日目入会率":"ApplyingRate2",
+                  "合計入会率":"RateSum"};
+  setMembers(latestArray, members, keyArray,"MemberName1","MemberName2");
+
 
 }
