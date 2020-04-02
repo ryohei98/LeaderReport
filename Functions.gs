@@ -1,4 +1,4 @@
-//一番初めに最新の行をすべて一次配列に格納して一次配列で返す関数
+//一番初めに最新の行をすべて一次配列に格納して二次配列で返す関数
 function createLatest(sheet) {
 
   //最終行列を取得しておく
@@ -28,7 +28,7 @@ function goDownRow(sheet) {
   //最終行の取得
   var lastRow = sheet.getLastRow();
   //一番初めの時のための条件分岐
-  if (lastRow > 0) {
+  if (lastRow > 3) {
     //行を挿入する
     sheet.insertRowAfter(3);
   }

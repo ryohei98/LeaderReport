@@ -21,7 +21,7 @@
       padding: 10px 30px;
       width:100%;
       text-align:left;
-      border-radius: 5px;
+      border-radius: 5px 5px 0 0;
     }
 
     .main {
@@ -87,7 +87,9 @@
           <tbody>
             <tr>
               <th scope='row'>" + thisMember["MemberName"] + "</th>
-              <td>Mark</td>
+              <? for( var member in members){
+                    var thisMember = members[member] ;?>
+              <td><?= getValueByID("");?></td>
               <td>@mdo</td>
               <td>@mdo</td>
               <td>@mdo</td>
