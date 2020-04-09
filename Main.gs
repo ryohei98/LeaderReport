@@ -12,67 +12,48 @@ function Main(){
   var SheetSalesBad = ss.getSheetByName("SalesBad");
   var SheetPlace = ss.getSheetByName("PlaceSpecific");
   var SheetIndivi = ss.getSheetByName("Individual");
+
+  // Listのシートだけよく使うので取得する
   var latestArray = createLatest(SheetList)
 
-  var placeName = "PlaceName";
-  var leaderName = "LeaderName";
-  var date = "Date";
-  var serviceShort = "ServiceShort";
-  var salesGood = "SalesGood";
-  var salesBad = "SalesBad";
-  var placeInformation = "PlaceInFormation";
-  var sugoi = "Sugoi";
-  var notice = "Notice";
-  var memberName1 = "MemberName1";
-  var memberName2 = "MemberName2";
-  var attendance1 = "Attendance1";
-  var attendance2 = "Attendance2";
-  var numServed1 = "NumServed1";
-  var numServed2 = "NumServed2";
-  var numServedSum = "NumServedSum";
-  var numApplying1 = "NumApplying1";
-  var numApplying2 = "NumApplying2";
-  var numApplyingSum = "NumApplyingSum"
-
-
-  // メールのためにObjectに格納しておく
-    var obj = makeObjForEmail(array);
+  // 扱いやすいようにobj化する
+    var listObj = makeObj(array);
 
   // 以下で各valueを取得
   // 会場名(質問についているIDをもとに取得してくる）
-  var latestPlace = getValueByID(latestArray, placeName);
+  var latestPlace = getValueByID(listObj, placeName);
   obj[placeName] = latestPlace;
   // リーダー名
-  var latestLeaderName = getValueByID(latestArray, leaderName);
+  var latestLeaderName = getValueByID(listObj, leaderName);
   obj[leaderName] = latestLeaderName;
 
   // Logger.log("latestLeaderName:%s",latestLeaderName);
   // 開催日
-  var latestDate = getValueByID(latestArray, date);
+  var latestDate = getValueByID(listObj, date);
   obj[date] = latestDate;
 
   // 教材サービス
-  var latestService = getValueByID(latestArray, serviceShort);
+  var latestService = getValueByID(listObj, serviceShort);
   obj[serviceShort] = latestService;
 
   // 営業・良かった点
-  var latestSalesGood = getValueByID(latestArray, salesGood);
+  var latestSalesGood = getValueByID(listObj, salesGood);
   obj[salesGood] = latestSalesGood;
 
   // 営業悪かった・不明点
-  var latestSalesBad = getValueByID(latestArray, salesBad);
+  var latestSalesBad = getValueByID(listObj, salesBad);
   obj[salesBad] = latestSalesBad;
 
   // 店舗固有情報共有
-  var latestPlaceInfo = getValueByID(latestArray, placeInformation);
+  var latestPlaceInfo = getValueByID(listObj, placeInformation);
   obj[placeInformation] = latestPlaceInfo;
 
   // スゴイきみ
-  var latestSugoi = getValueByID(latestArray, sugoi);
+  var latestSugoi = getValueByID(listObj, sugoi);
   obj[sugoi] = latestSugoi;
 
   // 気付き
-  var latestNotice = getValueByID(latestArray, notice);
+  var latestNotice = getValueByID(listObj, notice);
   obj[notice] = latestNotice;
 
   // 以下で直近の回答を変数に格納
@@ -145,7 +126,7 @@ function Main(){
 
   // RecentResultシートの更新を行う
   // まずは店舗の列でgoDownRow()を実行
-  var placeNameCol = getColByIDwoCol(SheetResult,"店舗");
+  var placeNameCol = getColByID(SheetResult,"店舗");
   // Logger.log("placeNameCol:%s",placeNameCol);
 
   // 当該店舗の行以外を下にずらす
