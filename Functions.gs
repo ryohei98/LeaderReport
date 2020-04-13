@@ -543,9 +543,11 @@ function setMembers(sheet, members, keyObj, keyword, memberName1, memberName2, d
   return members
 }
 
-function makeObjForEmail(array){
+function makeObjForEmail(array) {
+  // return用のArrayを作成
   var obj = new Object(1);
-  for (var index in array[0]){
+  //
+  for (var index in array[0]) {
     var question = array[0][index];
     var questionSplit = question.split(/\[|\]/);
     var answer = array[1][index];

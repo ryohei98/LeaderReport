@@ -3,24 +3,24 @@
 
 <head>
   <style>
-    .header{
-      background-color:#2288ff;
+    .header {
+      background-color: #2288ff;
       color: #fff;
-      margin:0;
+      margin: 0;
       margin-bottom: 10px;
       padding: 10px 0 10px 0;
-      width:100%;
+      width: 100%;
       text-align: center;
     }
 
-    .chapter-head{
-      background-color:#2288ff;
+    .chapter-head {
+      background-color: #2288ff;
       color: #fff;
-      margin:0;
-      margin-bottom: 10px;
+      margin: 0;
+      margin-bottom: 1px;
       padding: 10px 30px;
-      width:100%;
-      text-align:left;
+      width: 100%;
+      text-align: left;
       border-radius: 5px 5px 0 0;
     }
 
@@ -34,9 +34,14 @@
 
     .chapter-wrapper {
       text-align: left;
-      margin-bottom:30px;
+      margin-bottom: 10px;
       border: 1px solid gray;
       border-radius: 5px;
+    }
+
+    .table {
+      margin-bottom: 0;
+      border-bottom: #ccc 1px solid;
     }
   </style>
   <meta charset='UTF-8' />
@@ -44,117 +49,380 @@
   <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
 </head>
 
-<body>
-  <div class = 'header'>
-    <h1 class ='header'>リーダー報告書</h1>
-  </div>
-  <div class='container main'>
-    <div class='content-wrapper'>
-      <table class='table table-hover mb-5'>
-        <tbody>
-          <tr>
-            <th scope='row'>会場名</th>
-            <td>"+ obj["PlaceName"] +"</td>
-          </tr>
-          <tr>
-            <th scope='row'>リーダー名</th>
-            <td>" + obj["LeaderName"] + "</td>
-          </tr>
-          <tr>
-            <th scope='row'>開催日</th>
-            <td>" + obj["Date"] + "</td>
-          </tr>
-        </tbody>
-      </table>
-      <h1>一日目</h1>
-      <div class='chapter-wrapper'>
-        <h2 class='chapter-head'>個人記録</h2>
-        <table class='table table-hover'>
-          <thead>
-            <tr>
-              <th scope='col'>メンバー名</th>
-              <th scope='col'>早退遅刻</th>
-              <th scope='col'>時間</th>
-              <th scope='col'>目標入会率</th>
-              <th scope='col'>入会率</th>
-              <th scope='col'>接客数</th>
-              <th scope='col'>入会数</th>
-              <th scope='col'>入会数</th>
-              <th scope='col'>休憩予定</th>
-              <th scope='col'>休憩結果</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope='row'>" + thisMember["MemberName"] + "</th>
-              <? for( var member in members){
-                    var thisMember = members[member] ;?>
-              <td><?= getValueByID("");?></td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class ="chapter-wrapper">
-        <h2 class ="chapter-head">時間帯別の記録</h2>
-        <table class='table table-hover'>
-          <thead>
-            <tr>
-              <th scope='col'></th>
-              <th scope='col'>11:30</th>
-              <th scope='col'>13:00</th>
-              <th scope='col'>15:00</th>
-              <th scope='col'>17:00</th>
-              <th scope='col'>19:00</th>
-              <th scope='col'>それ以降</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope='row'>一日目</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class ="chapter-wrapper">
-        <h2 class ="chapter-head">来場者属性</h2>
-        <table class='table table-hover'>
-          <thead>
-            <tr>
-              <th scope='col'></th>
-              <th scope='col'>11:30</th>
-              <th scope='col'>13:00</th>
-              <th scope='col'>15:00</th>
-              <th scope='col'>17:00</th>
-              <th scope='col'>19:00</th>
-              <th scope='col'>それ以降</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope='row'>" + thisMember["MemberName"] + "</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
+  <body>
+    <div class='header'>
+      <h1 class='header'>リーダー報告書</h1>
     </div>
-  </div>
-</body>
+    <div class='container main'>
+      <div class='content-wrapper'>
+        <table class='table table-hover mb-3'>
+          <tbody>
+            <tr>
+              <th scope='row'>会場名</th>
+              <td>
+                <?= obj["PlaceName"] ?>
+              </td>
+            </tr>
+            <tr>
+              <th scope='row'>リーダー名</th>
+              <td>
+                <?= obj["LeaderName"] ?>
+              </td>
+            </tr>
+            <tr>
+              <th scope='row'>開催日</th>
+              <td>
+                <?= obj["Date"] ?>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="day-wrapper">
+          <h1>一日目</h1>
+          <div class='chapter-wrapper'>
+            <h2 class='chapter-head'>個人記録</h2>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th scope='col'>メンバー名</th>
+                  <th scope='col'>早退遅刻</th>
+                  <th scope='col'>時間</th>
+                  <th scope='col'>目標入会率</th>
+                  <th scope='col'>入会率</th>
+                  <th scope='col'>接客数</th>
+                  <th scope='col'>入会数</th>
+                  <th scope='col'>休憩予定</th>
+                  <th scope='col'>休憩結果</th>
+                </tr>
+              </thead>
+              <tbody>
+                <? for( var member in members){ ?>
+                <tr>
+                  <? thisMember = members[member] ?>
+                  <th scope='row'>
+                    <? = thisMember["MemberName"] ?>
+                  </th>
+                  <td>
+                  </td>
+                  <?= thisMember["Attendance"] ?>
+                  <td>
+                    <? if (TimeLate1||TimeEarly1){ ?>
+                    <?= thisMember["TimeLate1"] ?>
+                    ~
+                    <?= thisMember["TimeEarly1"] ?>
+                    <? } ?>
+                  </td>
+                  <td>
+                    <?= thisMember["TargetRate1"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["ApplyingRate1"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["NumServed1"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["NumApplying1"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["BreakTimePlanned1"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["BrekTimeActual1"] ?>
+                  </td>
+                </tr>
+                <? } ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="chapter-wrapper">
+            <h2 class="chapter-head">時間帯別の記録</h2>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th scope='col'>~11:30</th>
+                  <th scope='col'>~13:00</th>
+                  <th scope='col'>~15:00</th>
+                  <th scope='col'>~17:00</th>
+                  <th scope='col'>~19:00</th>
+                  <th scope='col'>~それ以降</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope='row'>
+                    来場者数
+                  </th>
+                  <td>
+                    <?= obj["NumServedT1D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT2D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT3D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT4D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT5D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT6D1"] ?>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope='row'>
+                    入会者数
+                  </th>
+                  <td>
+                    <?= obj["NumApplyingT1D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT2D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT3D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT4D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT5D1"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT6D1"] ?>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="chapter-wrapper">
+            <h2 class="chapter-head">来場者属性</h2>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th scope='col'>
+
+                  </th>
+                  <th scope='col'>
+                    チャレンジタッチ数
+                  </th>
+                  <th scope='col'>
+                    公文
+                  </th>
+                  <th scope='col'>
+                    紙のチャレンジ
+                  </th>
+                  <th scope='col'>
+                    塾
+                  </th>
+                  <th scope='col'>
+                    宿題のみ
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope='col'>
+                    人数
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumChareta1] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumKumon1] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumShinken1] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumCram1] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumOnly1] ?>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="day-wrapper">
+          <h1 class="mt-3">二日目</h1>
+          <div class='chapter-wrapper'>
+            <h2 class='chapter-head'>個人記録</h2>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th scope='col'>メンバー名</th>
+                  <th scope='col'>早退遅刻</th>
+                  <th scope='col'>時間</th>
+                  <th scope='col'>目標入会率</th>
+                  <th scope='col'>入会率</th>
+                  <th scope='col'>接客数</th>
+                  <th scope='col'>入会数</th>
+                  <th scope='col'>休憩予定</th>
+                  <th scope='col'>休憩結果</th>
+                </tr>
+              </thead>
+              <tbody>
+                <? for( var member in members){ ?>
+                <tr>
+                  <? thisMember = members[member] ?>
+                  <th scope='row'>
+                    <? = thisMember["MemberName"] ?>
+                  </th>
+                  <td>
+                  </td>
+                  <?= thisMember["Attendance"] ?>
+                  <td>
+                    <? if (thisMember["TimeLate2"]||thisMember["TimeLate2"]){ ?>
+                    <?= thisMember["TimeLate2"] ?>
+                    ~
+                    <?= thisMember["TimeEarly2"] ?>
+                    <? } ?>
+                  </td>
+                  <td>
+                    <?= thisMember["TargetRate2"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["ApplyingRate2"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["NumServed2"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["NumApplying2"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["BreakTimePlanned2"] ?>
+                  </td>
+                  <td>
+                    <?= thisMember["BrekTimeActual2"] ?>
+                  </td>
+                </tr>
+                <? } ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="chapter-wrapper">
+            <h2 class="chapter-head">時間帯別の記録</h2>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th scope='col'>~11:30</th>
+                  <th scope='col'>~13:00</th>
+                  <th scope='col'>~15:00</th>
+                  <th scope='col'>~17:00</th>
+                  <th scope='col'>~19:00</th>
+                  <th scope='col'>~それ以降</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope='row'>
+                    来場者数
+                  </th>
+                  <td>
+                    <?= obj["NumServedT1D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT2D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT3D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT4D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT5D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumServedT6D2"] ?>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope='row'>
+                    入会者数
+                  </th>
+                  <td>
+                    <?= obj["NumApplyingT1D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT2D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT3D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT4D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT5D2"] ?>
+                  </td>
+                  <td>
+                    <?= obj["NumApplyingT6D2"] ?>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="chapter-wrapper">
+            <h2 class="chapter-head">来場者属性</h2>
+            <table class='table table-hover'>
+              <thead>
+                <tr>
+                  <th scope='col'>
+
+                  </th>
+                  <th scope='col'>
+                    チャレンジタッチ数
+                  </th>
+                  <th scope='col'>
+                    公文
+                  </th>
+                  <th scope='col'>
+                    紙のチャレンジ
+                  </th>
+                  <th scope='col'>
+                    塾
+                    </tSh>
+                  <th scope='col'>
+                    宿題のみ
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope='col'>
+                    人数
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumChareta2] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumKumon2] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumShinken2] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumCram2] ?>
+                  </th>
+                  <th scope='col'>
+                    <?= obj[NumOnly2] ?>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 
 </html>
